@@ -6,7 +6,16 @@ const getLogin = (req, res) => {
   res.render("users/login.ejs", { error: req.flash("error") });
 };
 const dataTable = (req, res) => {
-  res.render("dataTable.ejs",{ user: req.user });
+  let all_users=[];
+  let error= '';
+  User.find().then((data)=>{
+    all_users=data;    
+    res.render("dataTable.ejs",{ error: req.flash('error'), appUsers: all_users});
+  }).catch(()=>{
+    error= 'Failed to fetch data';    
+    res.render("dataTable.ejs",{ error: req.flash('error'), appUsers: all_users});
+  });
+  
 };
 const postLogin = (req, res, next) => {
   passport.authenticate("local", {
